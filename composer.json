@@ -10,5 +10,9 @@
             "name": "Artur Vesker",
             "email": "arturvesker@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+      "psr-0": { "Vesax\\MaintenanceBundle": "" }
+    },
+    "target-dir": "Vesax/MaintenanceBundle"
 }
