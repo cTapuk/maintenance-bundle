@@ -1,0 +1,46 @@
+<?php
+
+//MAINTENANCE
+
+function get_client_ip() {
+    $ipaddress = null;
+    if ($_SERVER['HTTP_CLIENT_IP'])
+        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+    else if($_SERVER['HTTP_X_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    else if($_SERVER['HTTP_X_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+    else if($_SERVER['HTTP_FORWARDED_FOR'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+    else if($_SERVER['HTTP_FORWARDED'])
+        $ipaddress = $_SERVER['HTTP_FORWARDED'];
+    else if($_SERVER['REMOTE_ADDR'])
+        $ipaddress = $_SERVER['REMOTE_ADDR'];
+    else
+        $ipaddress = 'UNKNOWN';
+
+    return $ipaddress;
+}
+
+$allowedIps = [{% for ip in allowedClients %}{{ ip }},{% endfor %}];
+$started = true;
+$ended = false;
+$now = new \DateTime();
+{% if start %}$started = $now->getTimestamp() > {{ start.getTimestamp() }};{% endif %}
+{% if end %}$ended = $now->getTimestamp() > {{ end.getTimestamp() }};{% endif %}
+
+if ((!in_array(get_client_ip(), $allowedIps)) && $started && (!$ended)) {
+    header('HTTP/1.1 503 Service Unavailable');
+    include 'maintenance_rendered.html';
+    exit();
+}
+
+use Symfony\Component\HttpFoundation\Request;
+$loader = require_once __DIR__.'/../app/bootstrap.php.cache';
+require_once __DIR__.'/../app/AppKernel.php';
+$kernel = new AppKernel('prod', false);
+$kernel->loadClassCache();
+$request = Request::createFromGlobals();
+$response = $kernel->handle($request);
+$response->send();
+$kernel->terminate($request, $response);

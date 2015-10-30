@@ -1,0 +1,14 @@
+{
+    "name": "vesax/maintenance-bundle",
+    "require": {
+        "symfony/symfony": "~2.6",
+        "symfony/console": "~2.6"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Artur Vesker",
+            "email": "arturvesker@gmail.com"
+        }
+    ]
+}
