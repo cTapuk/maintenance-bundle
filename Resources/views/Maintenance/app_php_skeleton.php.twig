@@ -22,7 +22,7 @@ function get_client_ip() {
     return $ipaddress;
 }
 
-$allowedIps = [{% for ip in allowedClients %}{{ ip }},{% endfor %}];
+$allowedIps = [{% for ip in allowedClients %}'{{ ip }}',{% endfor %}];
 $started = true;
 $ended = false;
 $now = new \DateTime();
