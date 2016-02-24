@@ -55,6 +55,12 @@ class DisableSiteCommand extends ContainerAwareCommand
                 InputOption::VALUE_NONE,
                 'Without confirmations mode'
             )
+            ->addOption(
+                'render-only',
+                null,
+                InputOption::VALUE_NONE,
+                'Render maintenance page only'
+            )
         ;
     }
 
@@ -90,11 +96,12 @@ class DisableSiteCommand extends ContainerAwareCommand
             $output->writeln('-------------------------');
         }
 
-        $start = null;
         $end = null;
 
         if ($start = $input->getOption('start')) {
             $start = new \DateTime($start);
+        } else {
+            $start = new \DateTime();
         }
 
         if ($end = $input->getOption('end')) {
@@ -119,21 +126,28 @@ class DisableSiteCommand extends ContainerAwareCommand
 
         $twig = $this->getContainer()->get('twig');
 
+        $pagePath = $webDir . 'maintenance_rendered.html';
+
         $parameters = [
             'createdAt' => new \DateTime(),
             'allowedClients' => $allowedClients,
             'start' => $start,
             'end' => $end,
-            'reason' => $input->getOption('reason')
+            'reason' => $input->getOption('reason'),
+            'rendered_page_path' => $pagePath
         ];
 
         $output->writeln('<info>Rendering maintenance page...</info>');
         file_put_contents(
-            $webDir . 'maintenance_rendered.html',
+            $pagePath,
             $twig->render('VesaxMaintenanceBundle:Maintenance:maintenance_page.html.twig', $parameters)
         );
 
-        $originalAppPhpPath = $currentAppPhpPath . '.disabled';
+        if ($input->getOption('render-only')) {
+            return;
+        }
+
+        $originalAppPhpPath = $webDir . 'app_disabled.php';
 
         $output->writeln('<info>Backup original app.php...</info>');
         rename($currentAppPhpPath, $originalAppPhpPath);

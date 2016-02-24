@@ -31,12 +31,11 @@ class EnableSiteCommand extends ContainerAwareCommand
         $webDir = $this->getContainer()->getParameter('kernel.root_dir') . '/../web/';
 
         $currentAppPhpPath = $webDir . 'app.php';
-        $originalAppPath = $currentAppPhpPath . '.disabled';
+        $originalAppPath = $webDir . 'app_disabled.php';
 
-        $currentAppPhpContent = file_get_contents($currentAppPhpPath);
         $output->writeln('<info>Checking current status...</info>');
 
-        if (!strpos($currentAppPhpContent, 'MAINTENANCE')) {
+        if (!is_readable($originalAppPath)) {
             $output->writeln('<error>App already enabled. Use app:disable for disable app</error>');
             return;
         }
