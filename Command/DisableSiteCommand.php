@@ -77,7 +77,7 @@ class DisableSiteCommand extends ContainerAwareCommand
         $questionHelper = $this->getHelper('question');
         $currentAppPhpPath = $webDir . 'app.php';
 
-        if (strpos(file_get_contents($currentAppPhpPath), 'MAINTENANCE')) {
+        if (strpos(file_get_contents($currentAppPhpPath), 'include "app_disabled.php"')) {
             $output->writeln('<error>App already disabled. Use app:enable for enable app</error>');
             return;
         }
@@ -109,10 +109,10 @@ class DisableSiteCommand extends ContainerAwareCommand
         }
 
         if (!$input->getOption('no-interactive')) {
-            $question = "App will be disabled <comment>" . ($start ? $start->format('Y-m-d h:i') : 'NOW') . "</comment>";
+            $question = "App will be disabled <comment>" . ($start ? $start->format('Y-m-d H:i') : 'NOW') . "</comment>";
 
             if ($end) {
-                $question .= " and will be enabled <comment>" . $end->format('Y-m-d h:i') . "</comment>";
+                $question .= " and will be enabled <comment>" . $end->format('Y-m-d H:i') . "</comment>";
             }
 
             $question .= "\r\nAccess allowed for clients by ip: " . implode(', ', $allowedClients);

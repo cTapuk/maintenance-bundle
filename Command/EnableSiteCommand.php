@@ -46,6 +46,9 @@ class EnableSiteCommand extends ContainerAwareCommand
         $output->writeln('<info>Returning original app.php...</info>');
         rename($originalAppPath, $currentAppPhpPath);
         chmod($currentAppPhpPath, 0755);
+
+        $output->writeln('<info>Removing rendered maintenance content...</info>');
+        unlink($webDir . 'maintenance_rendered.html');
     }
 
 }
