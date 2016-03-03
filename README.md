@@ -1,5 +1,26 @@
 # MaintenanceBundle
 
+## Installation
+```
+# Bash
+
+composer require vesax/maintenance-bundle dev-master
+```
+
+```
+# AppKernel.php
+if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
+    $bundles[] = new Vesax\MaintenanceBundle\VesaxMaintenanceBundle();
+}
+```
+
+# Configuration (optional)
+```
+vesax_maintenance:
+    allowed_clients:
+        - "127.0.0.1"
+```
+
 ## Usage Examples
 ```
 php app/console app:disable
