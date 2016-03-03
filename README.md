@@ -14,7 +14,7 @@ if (in_array($this->getEnvironment(), array('dev', 'test'), true)) {
 }
 ```
 
-# Configuration (optional)
+## Configuration (optional)
 ```
 vesax_maintenance:
     allowed_clients:
