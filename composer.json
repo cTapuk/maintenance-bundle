@@ -1,5 +1,5 @@
 {
-    "name": "vesax/maintenance-bundle",
+    "name": "ctapuk/maintenance-bundle",
     "require": {
         "symfony/symfony": "~2.6",
         "symfony/console": "~2.6"
